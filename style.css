@@ -114,4 +114,42 @@ header h1 {
 .price-value {
     font-weight: bold;
     color: #27ae60; /* Ana yeşil renk */
+
+}
+/* ... (mevcut tüm css kodlarınızın altına) ... */
+
+/* YENİ: Footer (Alt Bilgi) Stilleri */
+.site-footer {
+    text-align: center; /* İçeriği ortala */
+    padding: 20px 10px; /* İç boşluk (üst/alt 20px, yanlar 10px) */
+    margin: 30px auto 0 auto; /* Üstte 30px boşluk, altta 0 */
+    border-top: 2px solid #27ae60; /* Üstüne ana yeşil renkte çizgi */
+    max-width: 600px; /* Menü konteyneri ile aynı genişlikte kalsın */
+    background-color: #ffffff; /* Kartlar gibi beyaz arka plan */
+    border-radius: 8px 8px 0 0; /* Sadece üst köşeleri yuvarlat */
+    box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.05); /* Üste doğru hafif gölge */
+}
+
+.site-footer p {
+    margin: 8px 0; /* Paragraflar arası boşluk */
+    font-size: 0.95em; /* Biraz daha küçük yazı tipi */
+    color: #333; /* Koyu metin rengi */
+}
+
+/* Adres ve Telefon etiketleri */
+.site-footer strong {
+    color: #218838; /* Koyu yeşil etiket */
+}
+
+/* Telefon Numarası Linki */
+.site-footer a {
+    color: #27ae60; /* Ana yeşil renk */
+    text-decoration: none; /* Alt çizgiyi kaldır */
+    font-weight: bold;
+    font-size: 1.1em; /* Telefon numarası biraz daha belirgin olsun */
+}
+
+/* Linkin üzerine gelince */
+.site-footer a:hover {
+    text-decoration: underline; /* Üzerine gelince altını çiz */
 }
