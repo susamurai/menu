@@ -1,0 +1,117 @@
+/* Temel gövde stilleri */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f4f0;
+    color: #333;
+    margin: 0;
+    padding: 10px;
+}
+
+/* Başlık alanı */
+header {
+    text-align: center;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+}
+
+header h1 {
+    color: #27ae60;
+    margin: 0;
+}
+
+/* Menü konteyneri */
+.menu-container {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Menü kategorisi */
+.menu-category {
+    margin-bottom: 25px;
+}
+
+.menu-category h2 {
+    font-size: 1.6em;
+    color: #218838;
+    border-bottom: 2px solid #27ae60;
+    padding-bottom: 5px;
+    margin-top: 0;
+}
+
+/* Kategori altındaki liste */
+.menu-category ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* Her bir menü öğesi (Kart Tasarımı) */
+.menu-item-card {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    margin-bottom: 15px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+}
+
+/* Ürün resmi */
+.item-image {
+    width: 120px;
+    height: 100px; /* Sabit yükseklik, resimsiz kartlarla hizalı kalması için */
+    object-fit: cover;
+}
+
+/* Ürün detayları (ad ve fiyatların olduğu alan) */
+.item-details {
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* İçeriği yukarıdan başlat */
+    flex-grow: 1;
+}
+
+/* Resim olmayan ürünler için (daha önce 'item-details-no-image' idi, birleştirdik) */
+.item-details-no-image {
+    padding: 15px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Ürün adı */
+.item-name {
+    font-weight: bold;
+    font-size: 1.15em;
+    color: #333;
+}
+
+/* YENİ: Fiyatların listelendiği konteyner */
+.price-container {
+    margin-top: 8px; /* Ürün adıyla fiyatlar arası boşluk */
+}
+
+/* YENİ: Her bir fiyat satırı (Porsiyon: 180 TL) */
+.price-entry {
+    margin-top: 4px; /* Çoklu fiyatlar arası boşluk */
+    font-size: 1.1em;
+}
+
+.price-entry:first-child {
+    margin-top: 0;
+}
+
+/* YENİ: Fiyat etiketi (Porsiyon, KG vb.) */
+.price-label {
+    font-size: 0.95em;
+    font-weight: normal;
+    color: #555; /* Etiketi biraz daha soluk yap */
+    margin-right: 5px;
+}
+
+/* YENİ: Fiyat değeri (180 TL) */
+.price-value {
+    font-weight: bold;
+    color: #27ae60; /* Ana yeşil renk */
+}

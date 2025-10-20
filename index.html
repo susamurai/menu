@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>İşletme Adı - Menü</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <h1>İşletmenizin Adı</h1>
+        <p>Lezzet Menümüz</p>
+    </header>
+
+    <main id="menu-container" class="menu-container">
+        <h2>Menü Yükleniyor...</h2>
+    </main>
+
+    <script>
+        // 1. ADIM: Google E-Tablo CSV linkinizi buraya yapıştırın.
+        const googleSheetURL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ0UO67U3zs99RUa9n3KCPYCUTSZrEGgxfdmz5tGlqcR5wuTNg5wkjqG1an-k5V-ReAtr-EOqL5xI9W/pub?gid=0&single=true&output=csv';
+
+        document.addEventListener("DOMContentLoaded", function() {
+            fetchMenuData();
+        });
+
+        function fetchMenuData() {
+            fetch(googleSheetURL)
+                .then(response => response.text())
+                .then(csvText => processData(csvText))
+                .catch(error => {
+                    console.error('Hata oluştu:', error);
+                    document.getElementById('menu-container').innerHTML = '<h2>Menü yüklenirken bir hata oluştu.</h2>';
+                });
+        }
+
+        // GÜNCELLENDİ: CSV metnini ve çoklu fiyatları işleyen fonksiyon
+        function processData(csvText) {
+            const menuContainer = document.getElementById('menu-container');
+            const lines = csvText.split(/\r?\n/);
+            const groupedMenu = {};
+
+            for (let i = 1; i < lines.length; i++) {
+                const line = lines[i];
+                if (!line) continue;
+
+                const parts = line.split(',');
+                if (parts.length < 4) continue; 
+
+                const kategori = parts[0].trim();
+                const urun = parts[1].trim();
+                const resimUrl = parts[2].trim();
+                
+                // Ham fiyat metnini al (örn: "Porsiyon: 180 TL | KG: 1200 TL")
+                const fiyatString = parts.slice(3).join(',').trim();
+
+                // YENİ: Fiyatları ayrıştırma bölümü
+                const fiyatListesi = [];
+                // 1. Önce "|" karakterine göre böl (birden fazla fiyat varsa)
+                const fiyatParcalari = fiyatString.split('|');
+
+                for (const parca of fiyatParcalari) {
+                    const trimmedParca = parca.trim();
+                    let etiket = '';
+                    let deger = '';
+
+                    // 2. ":" karakteri var mı diye bak (Açıklama: Fiyat formatı)
+                    const kolonIndex = trimmedParca.indexOf(':');
+                    
+                    if (kolonIndex > -1) {
+                        // Eğer ":" varsa, etiketi ve değeri ayır
+                        etiket = trimmedParca.substring(0, kolonIndex).trim();
+                        deger = trimmedParca.substring(kolonIndex + 1).trim();
+                    } else {
+                        // Eğer ":" yoksa, bu etiketsiz bir fiyattır (örn: "50 TL")
+                        etiket = '';
+                        deger = trimmedParca;
+                    }
+                    
+                    if (deger) { // Değer boş değilse listeye ekle
+                        fiyatListesi.push({ aciklama: etiket, deger: deger });
+                    }
+                }
+                // YENİ BÖLÜM BİTTİ
+
+                if (!groupedMenu[kategori]) {
+                    groupedMenu[kategori] = [];
+                }
+                
+                // Gruba ürün bilgilerini ve ayrıştırılmış fiyat listesini ekle
+                groupedMenu[kategori].push({ urun, resimUrl, fiyatlar: fiyatListesi });
+            }
+
+            // GÜNCELLENDİ: Menü HTML'ini oluştur (Yeni fiyat listesi yapısıyla)
+            let htmlOutput = '';
+            
+            for (const kategoriAdi in groupedMenu) {
+                htmlOutput += `<section class="menu-category"><h2>${kategoriAdi}</h2><ul>`;
+                
+                const items = groupedMenu[kategoriAdi];
+                for (const item of items) {
+                    
+                    const hasImage = item.resimUrl && item.resimUrl.startsWith('http');
+                    
+                    htmlOutput += `<li class="menu-item-card">`;
+                    
+                    if (hasImage) {
+                        htmlOutput += `<img src="${item.resimUrl}" alt="${item.urun}" class="item-image">`;
+                    }
+                    
+                    // Resim olsa da olmasa da detaylar alanı
+                    const detailClass = hasImage ? 'item-details' : 'item-details-no-image';
+                    htmlOutput += `<div class="${detailClass}">`;
+                    htmlOutput += `<span class="item-name">${item.urun}</span>`;
+
+                    // YENİ: Fiyatları HTML'e dökme
+                    htmlOutput += `<div class="price-container">`;
+                    for (const fiyat of item.fiyatlar) {
+                        htmlOutput += `<div class="price-entry">`;
+                        if (fiyat.aciklama) {
+                            // Açıklama varsa (Porsiyon, KG vb.)
+                            htmlOutput += `<span class="price-label">${fiyat.aciklama}:</span>`;
+                        }
+                        // Fiyat değeri (180 TL vb.)
+                        htmlOutput += `<span class="price-value">${fiyat.deger}</span>`;
+                        htmlOutput += `</div>`; // .price-entry bitti
+                    }
+                    htmlOutput += `</div>`; // .price-container bitti
+                    // YENİ BÖLÜM BİTTİ
+
+                    htmlOutput += `</div></li>`; // .item-details ve .menu-item-card bitti
+                }
+                
+                htmlOutput += `</ul></section>`;
+            }
+
+            menuContainer.innerHTML = htmlOutput;
+        }
+    </script>
+    </body>
+</html>
